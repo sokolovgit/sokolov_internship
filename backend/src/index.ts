@@ -1,13 +1,14 @@
 import dotenv from "dotenv";
 import Fastify from "fastify";
-import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
-import fs from "fs";
 import path from 'path';
-
+import { transactionsRoutes } from "./routes/transactionsRoutes";
+import { accountsRoutes } from "./routes/accountsRoutes";
 
 dotenv.config();
+
 const fastify = Fastify({ logger: true });
+const cors = require('@fastify/cors');
 
 const apiSpec = {
   mode: 'static',
@@ -17,6 +18,7 @@ const apiSpec = {
   exposeRoute: true,
 }
 
+fastify.register(cors, {origin: 'http://localhost:5173'})
 fastify.register(require('@fastify/swagger'), apiSpec);
 fastify.register(fastifySwaggerUi, { routePrefix: '/docs'});
 
@@ -38,6 +40,9 @@ fastify.register((fastify, opts, done) => {
     });
     done();
 });
+
+fastify.register(transactionsRoutes);
+fastify.register(accountsRoutes);
 
 const start = async () => {
     try {

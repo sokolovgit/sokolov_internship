@@ -16,20 +16,29 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import axios from 'axios';
 
 export default defineComponent({
   data() {
     return {
-      accountId: '',
+      accountId: "",
       amount: 0,
     };
   },
   methods: {
     async submitTransaction() {
-      await axios.post('http://localhost:3000/transactions', {
+      try {
+        await axios.post('http://localhost:3000/transactions', {
         accountId: this.accountId,
         amount: this.amount,
       });
+      this.$emit('transactionAdded');
+      this.accountId = '';
+      this.amount = 0;
+      console.log('Transaction submitted!')
+      } catch (error) {
+        console.error('Error submitting transaction:', error)
+      }
     },
   },
 });

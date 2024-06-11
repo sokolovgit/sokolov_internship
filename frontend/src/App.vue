@@ -1,22 +1,30 @@
-<script setup lang="ts">
-import TransactionForm from "./components/TransactionForm.vue";
-</script>
-
 <template>
   <TransactionForm />
+  <TransactionHistory />
 </template>
 
+
+<script setup lang="ts">
+//import { defineComponent } from "vue";
+
+import TransactionForm from "./components/TransactionForm.vue";
+import TransactionHistory from "./components/TransactionHistory.vue";
+
+// export default defineComponent({
+//   name: "App",
+//   components: {
+//     TransactionForm,
+//     TransactionHistory,
+//   },
+//   methods: {
+//     fetchTransactions() {
+//       (this.$refs.transactionHistory as any).fetchTransactions();
+//     }
+//   }
+// });
+
+</script>
+
+
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
 </style>

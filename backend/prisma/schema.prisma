@@ -8,8 +8,8 @@ datasource db {
 }
 
 model Account {
-  id      String @id @default(uuid())
-  balance Int
+  id           String        @id @default(uuid())
+  transactions Transaction[] @relation("AccountTransactions")
 }
 
 model Transaction {
@@ -17,4 +17,6 @@ model Transaction {
   accountId String
   amount    Int
   createdAt DateTime @default(now())
+
+  account Account @relation("AccountTransactions", fields: [accountId], references: [id])
 }
