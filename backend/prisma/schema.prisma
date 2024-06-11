@@ -8,12 +8,12 @@ datasource db {
 }
 
 model Account {
-  id      String @id @default(cuid())
+  id      String @id @default(uuid())
   balance Int
 }
 
 model Transaction {
-  id        String   @id @default(cuid())
+  id        String   @id @default(uuid())
   accountId String
   amount    Int
   createdAt DateTime @default(now())
