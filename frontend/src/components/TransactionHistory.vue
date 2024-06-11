@@ -1,6 +1,7 @@
+<!-- TransactionHistory.vue -->
 <template>
-  <div>
-    <h2 class="text-lg font-bold">Transaction History</h2>
+  <div class="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-md">
+    <h2 class="text-lg font-bold mb-4">Transaction History</h2>
     <ul>
       <li v-for="(transaction, index) in transactions" :key="transaction.id" class="my-2 p-2 border rounded">
         <p>
@@ -10,44 +11,48 @@
           </span>
           {{ transaction.amount < 0 ? "from" : "to" }} account {{ transaction.accountId }}
         </p>
-        <p v-if="index === transactions.length - 1">
-          The current account balance is {{ lastTransactionBalance }}$
-        </p>
+        <p v-if="index === 0">
+          The current account balance is
+        <span :class="{'text-red-500': lastTransactionBalance < 0, 'text-green-500': lastTransactionBalance > 0}">
+          {{ lastTransactionBalance }}$
+        </span>
+      </p>
       </li>
     </ul>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-import axios from "axios";
+<script setup lang="ts">
+import { ref, onMounted, defineExpose } from 'vue';
+import axios from 'axios';
 
-export default defineComponent({
-  name: "TransactionHistory",
-  data() {
-    return {
-      transactions: [] as any[],
-      lastTransactionBalance: 0,
-    };
-  },
-  methods: {
-    async fetchTransactions() {
-      try {
-        const response = await axios.get('http://localhost:3000/transactions');
-        this.transactions = response.data;
+// Component state
+const transactions = ref<any[]>([]);
+const lastTransactionBalance = ref<number>(0);
 
-        if (this.transactions.length > 0) {
-          const lastTransactionAccount = this.transactions[this.transactions.length - 1].accountId;
-          const balanceResponse = await axios.get(`http://localhost:3000/accounts/${lastTransactionAccount}`);
-          this.lastTransactionBalance = balanceResponse.data.balance;
-        }
-      } catch (error) {
-        console.error('Error fetching transactions:', error);
-      }
+// Fetch transactions from the server
+async function fetchTransactions() {
+  try {
+    const response = await axios.get('http://localhost:3000/transactions');
+    transactions.value = response.data;
+
+    if (transactions.value.length > 0) {
+      const lastTransactionAccount = transactions.value[0].accountId;
+      const balanceResponse = await axios.get(`http://localhost:3000/accounts/${lastTransactionAccount}`);
+      lastTransactionBalance.value = balanceResponse.data.balance;
     }
-  },
-  mounted() {
-    this.fetchTransactions();
+  } catch (error) {
+    console.error('Error fetching transactions:', error);
   }
+}
+
+// Lifecycle hook to fetch transactions when component is mounted
+onMounted(() => {
+  fetchTransactions();
+});
+
+// Expose the fetchTransactions method to the parent component
+defineExpose({
+  fetchTransactions
 });
 </script>

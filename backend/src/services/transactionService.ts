@@ -10,17 +10,16 @@ export async function saveTransaction(accountId: string, amount: number) {
         account = await createAccount(accountId);
     }
 
-    // Create the transaction
-    const transaction = await createTransaction(accountId, amount);
-
-    // const balance = await getAccountBalance(accountId);
-    // console.log("Balance for account", accountId, "is", balance);
-
-    return transaction;
+    return await createTransaction(accountId, amount);
 }
 
 export function getTransactions() {
-    return prisma.transaction.findMany();
+    return prisma.transaction.findMany(
+        {orderBy: {
+            createdAt: "desc",
+            }
+        }
+    );
 }
 
 async function createAccount(accountId: string) {
