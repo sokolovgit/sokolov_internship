@@ -1,6 +1,6 @@
 <!-- TransactionForm.vue -->
 <template>
-  <div class="max-w-md bg-white p-8 rounded-lg shadow-md">
+  <div class="bg-white p-8 rounded-lg shadow-md h-full">
     <h2 class="text-lg font-bold mb-4">Submit Transaction</h2>
     <form @submit.prevent="submitTransaction">
       <div class="mb-4">
@@ -22,16 +22,13 @@
 import { ref } from 'vue';
 import axios from 'axios';
 
-// Define reactive state using ref
 const accountId = ref('');
-const amount = ref(0);
+const amount = ref('');
 const accountIdError = ref('');
 const amountError = ref('');
 
-// Define emit event function
 const emit = defineEmits(['transactionAdded']);
 
-// Define the submitTransaction method
 async function submitTransaction() {
   accountIdError.value = '';
   amountError.value = '';
@@ -53,12 +50,19 @@ async function submitTransaction() {
       accountId: accountId.value,
       amount: amount.value,
     });
-    emit('transactionAdded'); // Emit the event
+    emit('transactionAdded');
     accountId.value = '';
-    amount.value = 0;
+    amount.value = '';
     console.log('Transaction submitted!');
   } catch (error) {
     console.error('Error submitting transaction:', error);
   }
 }
 </script>
+
+<style scoped>
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+</style>

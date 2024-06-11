@@ -7,7 +7,7 @@ export async function saveTransaction(accountId: string, amount: number) {
     });
 
     if (!account) {
-        account = await createAccount(accountId);
+        await createAccount(accountId);
     }
 
     return await createTransaction(accountId, amount);

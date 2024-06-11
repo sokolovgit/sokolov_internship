@@ -1,9 +1,11 @@
 <!-- App.vue -->
 <template>
-  <div id="app" class="flex justify-center items-end ">
-    <div class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-4 flex-grow">
-      <TransactionForm @transactionAdded="refreshTransactionHistory" class="flex-grow" />
-      <TransactionHistory ref="transactionHistory" class="flex-grow" />
+  <div id="app" class="min-h-screen flex flex-col md:flex-row">
+    <div class="w-full md:w-1/3 p-2">
+      <TransactionForm @transactionAdded="refreshTransactionHistory" />
+    </div>
+    <div class="w-full md:w-2/3 p-2">
+      <TransactionHistory ref="transactionHistory" />
     </div>
   </div>
 </template>
@@ -13,16 +15,13 @@ import { ref } from 'vue';
 import TransactionForm from "./components/TransactionForm.vue";
 import TransactionHistory from "./components/TransactionHistory.vue";
 
-// Define the type for the ref
 interface TransactionHistoryRef {
   fetchTransactions: () => void;
 }
 
-// Create a ref with the defined type
 const transactionHistory = ref<TransactionHistoryRef | null>(null);
 
 function refreshTransactionHistory() {
-  // Ensure the method exists before calling
   if (transactionHistory.value) {
     transactionHistory.value.fetchTransactions();
   }
