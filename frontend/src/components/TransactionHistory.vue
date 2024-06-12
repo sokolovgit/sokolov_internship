@@ -10,9 +10,9 @@
             <span :class="{'text-red-500': transaction.amount < 0, 'text-green-500': transaction.amount > 0}">
             {{ Math.abs(transaction.amount) }}$
           </span>
-            {{ transaction.amount < 0 ? "from" : "to" }} account {{ transaction.account_id }}
+            {{ transaction.amount < 0 ? "from" : "to" }} account {{ transaction.accountId }}
           </p>
-          <p v-if="index === 0">
+          <p v-if="pagination.current_page === 1 && index === 0">
             The current account balance is
             <span :class="{'text-red-500': lastTransactionBalance < 0, 'text-green-500': lastTransactionBalance > 0}">
             {{ lastTransactionBalance }}$
@@ -52,9 +52,10 @@ async function fetchTransactions(page = 1) {
     transactions.value = response.data.data;
     pagination.value = response.data.pagination;
 
-    if (transactions.value.length > 0) {
-      const lastTransactionAccount = transactions.value[0].account_id;
+    if (pagination.value.current_page === 1 && transactions.value.length > 0) {
+      const lastTransactionAccount = transactions.value[0].accountId;
       const balanceResponse = await axios.get(`http://localhost:3000/accounts/${lastTransactionAccount}`);
+
       lastTransactionBalance.value = balanceResponse.data.balance;
     }
   } catch (error) {
@@ -72,5 +73,4 @@ defineExpose({
 </script>
 
 <style scoped>
-/* Add any additional styling here */
 </style>
