@@ -8,37 +8,54 @@
     </button>
 
     <div class="flex items-center space-x-1 mx-2">
-      <button
-        v-if="currentPage > 2"
-        @click="updatePage(1)"
-        class="w-10 bg-indigo-200 text-indigo-800 p-2 rounded-md shadow-sm hover:bg-indigo-500">
-        1
-      </button>
-      <div v-if="currentPage > 3" class="w-10 flex justify-center">
-        ...
-      </div>
+      <template v-if="totalPages <= 5">
+        <button
+          v-for="page in totalPages"
+          :key="page"
+          @click="updatePage(page)"
+          :disabled="page === currentPage"
+          :class="{
+            'bg-indigo-600 text-white hover:bg-indigo-700': page === currentPage,
+            'bg-indigo-200 text-indigo-800 hover:bg-indigo-500': page !== currentPage
+          }"
+          class="w-10 p-2 rounded-md shadow-sm">
+          {{ page }}
+        </button>
+      </template>
+      <template v-else>
+        <button
+          v-if="currentPage > 2"
+          @click="updatePage(1)"
+          class="w-10 bg-indigo-200 text-indigo-800 p-2 rounded-md shadow-sm hover:bg-indigo-500">
+          1
+        </button>
+        <div v-if="currentPage > 3" class="w-10 flex justify-center">
+          ...
+        </div>
 
-      <button
-        v-for="page in pages"
-        :key="page"
-        @click="updatePage(page)"
-        :class="{
-          'bg-indigo-600 text-white hover:bg-indigo-700': page === currentPage,
-          'bg-indigo-200 text-indigo-800 hover:bg-indigo-500': page !== currentPage
-        }"
-        class="w-10 p-2 rounded-md shadow-sm">
-        {{ page }}
-      </button>
+        <button
+          v-for="page in pages"
+          :key="page"
+          @click="updatePage(page)"
+          :disabled="page === currentPage"
+          :class="{
+            'bg-indigo-600 text-white hover:bg-indigo-700': page === currentPage,
+            'bg-indigo-200 text-indigo-800 hover:bg-indigo-500': page !== currentPage
+          }"
+          class="w-10 p-2 rounded-md shadow-sm">
+          {{ page }}
+        </button>
 
-      <div v-if="currentPage <= totalPages - 3" class="w-10 flex justify-center">
-        ...
-      </div>
-      <button
-        v-if="currentPage < totalPages - 1"
-        @click="updatePage(totalPages)"
-        class="w-10 bg-indigo-200 text-indigo-800 p-2 rounded-md shadow-sm hover:bg-indigo-500">
-        {{ totalPages }}
-      </button>
+        <div v-if="currentPage <= totalPages - 3" class="w-10 flex justify-center">
+          ...
+        </div>
+        <button
+          v-if="currentPage < totalPages - 1"
+          @click="updatePage(totalPages)"
+          class="w-10 bg-indigo-200 text-indigo-800 p-2 rounded-md shadow-sm hover:bg-indigo-500">
+          {{ totalPages }}
+        </button>
+      </template>
     </div>
 
     <button
@@ -83,6 +100,10 @@ function updatePage(page: number) {
 }
 
 const pages = computed(() => {
+  if (props.totalPages === 1) {
+    return [1];
+  }
+
   let min = Math.max(1, props.currentPage - 1);
   let max = Math.min(props.totalPages, props.currentPage + 1);
 

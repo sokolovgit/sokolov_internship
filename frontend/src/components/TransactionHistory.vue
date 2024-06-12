@@ -55,7 +55,7 @@ async function fetchTransactions(page = 1) {
     if (pagination.value.current_page === 1 && transactions.value.length > 0) {
       const lastTransactionAccount = transactions.value[0].accountId;
       const balanceResponse = await axios.get(`http://localhost:3000/accounts/${lastTransactionAccount}`);
-
+      console.log('Balance response:', balanceResponse.data);
       lastTransactionBalance.value = balanceResponse.data.balance;
     }
   } catch (error) {

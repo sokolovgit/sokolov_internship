@@ -2,6 +2,7 @@
 import {prisma} from "../utils/prisma";
 
 export async function saveTransaction(accountId: string, amount: number) {
+    accountId = accountId.trim();
     // Check if the account exists, if not, create it
     let account = await prisma.account.findUnique({
         where: { id: accountId },
