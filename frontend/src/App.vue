@@ -1,4 +1,3 @@
-<!-- App.vue -->
 <template>
   <div id="app" class="min-h-screen flex flex-col md:flex-row">
     <div class="w-full md:w-1/3 p-2">

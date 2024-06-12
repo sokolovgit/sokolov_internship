@@ -22,32 +22,14 @@ fastify.register(cors, {origin: 'http://localhost:5173'})
 fastify.register(require('@fastify/swagger'), apiSpec);
 fastify.register(fastifySwaggerUi, { routePrefix: '/docs'});
 
-fastify.register((fastify, opts, done) => {
-    fastify.get('/ping', {
-        schema: {
-            description: 'Ping endpoint',
-            summary: 'Ping endpoint',
-            tags: ['Utils'],
-            response: {
-                200: {
-                    description: 'Successful response',
-                    type: 'string'
-                }
-            }
-        }
-    }, async (request, reply) => {
-        return 'pong\n';
-    });
-    done();
-});
-
 fastify.register(transactionsRoutes);
 fastify.register(accountsRoutes);
+fastify.get('/ping', async (request, reply) => {return 'pong\n'; });
 
 const start = async () => {
     try {
-        await fastify.listen({ port: 3000 });
-        fastify.log.info(`Server is running at http://localhost:3000`);
+        await fastify.listen({ port: 3000, host: '0.0.0.0' });
+        fastify.log.info(`Server is running at http://0.0.0.0:3000`);
     } catch (err) {
         fastify.log.error(err);
         process.exit(1);

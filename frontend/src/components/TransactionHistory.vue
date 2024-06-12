@@ -31,7 +31,6 @@ import { ref, onMounted, defineExpose } from 'vue';
 import axios from 'axios';
 import PaginationComponent from "./PaginationComponent.vue";
 
-// Component state
 const transactions = ref<any[]>([]);
 const lastTransactionBalance = ref<number>(0);
 const pagination = ref({
@@ -72,5 +71,3 @@ defineExpose({
 });
 </script>
 
-<style scoped>
-</style>
