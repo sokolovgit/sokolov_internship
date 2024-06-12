@@ -1,9 +1,15 @@
+//traNsactionsController.ts
 import { FastifyRequest, FastifyReply} from "fastify";
-import { saveTransaction, getTransactions} from "../services/transactionService";
+import { saveTransaction, getPaginatedTransactions} from "../services/transactionService";
 
 interface TransactionRequest {
     accountId: string;
     amount: number;
+}
+
+interface PaginationRequest {
+    page?: number;
+    page_size?: number;
 }
 
 export async function submitTransactionHandler(request: FastifyRequest, reply: FastifyReply) {
@@ -13,6 +19,7 @@ export async function submitTransactionHandler(request: FastifyRequest, reply: F
 }
 
 export async function getTransactionsHandler(request: FastifyRequest, reply: FastifyReply) {
-    const transactions = await getTransactions();
-    reply.send(transactions);
+    const { page = 1, page_size = 10 } = request.query as PaginationRequest;
+    const paginatedTransactions = await getPaginatedTransactions(Number(page), Number(page_size));
+    reply.send(paginatedTransactions);
 }

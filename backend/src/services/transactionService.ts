@@ -1,3 +1,4 @@
+// transactionService.ts
 import {prisma} from "../utils/prisma";
 
 export async function saveTransaction(accountId: string, amount: number) {
@@ -20,6 +21,30 @@ export function getTransactions() {
             }
         }
     );
+}
+
+export async function getPaginatedTransactions(page: number, pageSize: number) {
+    const totalRecords = await prisma.transaction.count();
+    const totalPages = Math.ceil(totalRecords / pageSize);
+
+    const transactions = await prisma.transaction.findMany({
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+        orderBy: {
+            createdAt: "desc",
+        },
+    });
+
+    return {
+        data: transactions,
+        pagination: {
+            total_records: totalRecords,
+            current_page: page,
+            total_pages: totalPages,
+            next_page: page < totalPages ? page + 1 : null,
+            prev_page: page > 1 ? page - 1 : null,
+        }
+    };
 }
 
 async function createAccount(accountId: string) {
